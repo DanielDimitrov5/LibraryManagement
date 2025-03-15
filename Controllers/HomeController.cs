@@ -12,7 +12,6 @@ public class HomeController : Controller
     
     private readonly LibraryDbContext _context;
     
-
     public HomeController(ILogger<HomeController> logger, LibraryDbContext context)
     {
         _logger = logger;
