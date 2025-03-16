@@ -1,8 +1,6 @@
-using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
-using LibraryManagement.Services;
+using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Controllers;
 
@@ -10,11 +8,11 @@ public class BookController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     
-    private readonly BookService _bookService;
+    private readonly IBookService _bookService;
     
-    private readonly GenreService _genreService;
+    private readonly IGenreService _genreService;
 
-    public BookController(ILogger<HomeController> logger, BookService bookService, GenreService genreService)
+    public BookController(ILogger<HomeController> logger, IBookService bookService, IGenreService genreService)
     {
         _logger = logger;
         _bookService = bookService;

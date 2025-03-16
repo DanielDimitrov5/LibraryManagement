@@ -1,6 +1,5 @@
-using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
-using LibraryManagement.Services;
+using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Controllers;
@@ -9,9 +8,9 @@ public class GenreController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     
-    private readonly GenreService _genreService;
+    private readonly IGenreService _genreService;
     
-    public GenreController(ILogger<HomeController> logger, GenreService genreService)
+    public GenreController(ILogger<HomeController> logger, IGenreService genreService)
     {
         _logger = logger;
         _genreService = genreService;

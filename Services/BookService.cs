@@ -1,15 +1,16 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Services;
 
-public class BookService
+public class BookService : IBookService
 {
     private readonly LibraryDbContext _context;
-    private readonly GenreService _genreService;
+    private readonly IGenreService _genreService;
 
-    public BookService(LibraryDbContext context, GenreService genreService)
+    public BookService(LibraryDbContext context, IGenreService genreService)
     {
         _context = context;
         _genreService = genreService;

@@ -1,5 +1,7 @@
+using LibraryManagement;
 using LibraryManagement.Data;
 using LibraryManagement.Services;
+using LibraryManagement.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +14,8 @@ builder.Services.AddDbContext<LibraryDbContext>(options => options.UseSqlServer(
 builder.Services.AddControllersWithViews();
 
 // Register custom services
-builder.Services.AddTransient<BookService>();
-builder.Services.AddTransient<GenreService>();
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IGenreService, GenreService>();
 
 var app = builder.Build();
 

@@ -1,10 +1,10 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
-using Microsoft.EntityFrameworkCore;
+using LibraryManagement.Services.Interfaces;
 
 namespace LibraryManagement.Services;
 
-public class GenreService
+public class GenreService : IGenreService
 {
     private readonly LibraryDbContext _context;
 
