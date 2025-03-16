@@ -1,0 +1,41 @@
+@model LibraryManagement.Data.Models.Genre
+
+
+@{
+    ViewData["Title"] = "Create Genre";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow rounded-3">
+                <div class="card-header bg-success text-white text-center">
+                    <h2 class="mb-0">Create Genre</h2>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label">Genre Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter genre name" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Create Genre</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

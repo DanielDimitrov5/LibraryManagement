@@ -21,6 +21,7 @@ public class BookController : Controller
         _genreService = genreService;
     }
 
+    [HttpGet]
     public IActionResult All()
     {
         

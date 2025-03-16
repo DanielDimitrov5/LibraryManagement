@@ -29,4 +29,16 @@ public class GenreService
         
         return genre;
     }
+
+    public void AddGenre(string name)
+    {
+        Genre genre = new Genre
+        {
+            Name = name
+        };
+        
+        _context.Genres.Add(genre);
+        
+        _context.SaveChanges();
+    }
 }

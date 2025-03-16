@@ -17,6 +17,7 @@ public class GenreController : Controller
         _genreService = genreService;
     }
 
+    [HttpGet]
     public IActionResult All()
     {
         // Get all genres
@@ -27,5 +28,19 @@ public class GenreController : Controller
         
         // Pass data to view
         return View(genres);
+    }
+
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(string name)
+    {
+        _genreService.AddGenre(name);
+        
+        return RedirectToAction("All");
     }
 }
