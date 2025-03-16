@@ -1,5 +1,6 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Controllers;
@@ -8,18 +9,23 @@ public class GenreController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     
-    private readonly LibraryDbContext _context;
-
-    public GenreController(ILogger<HomeController> logger, LibraryDbContext context)
+    private readonly GenreService _genreService;
+    
+    public GenreController(ILogger<HomeController> logger, GenreService genreService)
     {
         _logger = logger;
-        _context = context;
+        _genreService = genreService;
     }
 
     public IActionResult All()
     {
-        List<Genre> genres = _context.Genres.ToList();
+        // Get all genres
+        ICollection<Genre> genres = _genreService.GetAllGenres();
         
+        // Log message
+        _logger.Log(LogLevel.Information, "GenreController::All");
+        
+        // Pass data to view
         return View(genres);
     }
 }
