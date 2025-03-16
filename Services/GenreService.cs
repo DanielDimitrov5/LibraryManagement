@@ -19,4 +19,14 @@ public class GenreService
         
         return genres;
     }
+
+    public Genre GetGenreById(int id)
+    {
+        Genre genre = _context.Genres.FirstOrDefault(g => g.Id == id);
+        
+        if (genre == null)
+            throw new KeyNotFoundException($"Genre with id {id} not found");
+        
+        return genre;
+    }
 }
