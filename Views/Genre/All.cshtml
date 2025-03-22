@@ -52,7 +52,7 @@
         
         @foreach (var genre in @Model)
         {
-            <div class="genre-card">@genre.Name</div>
+            <div onclick="window.location.href='@Url.Action("Edit", "Genre", new { id = @genre.Id })';" class="genre-card">@genre.Name</div>
         }
 
     </div>

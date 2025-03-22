@@ -42,4 +42,20 @@ public class GenreController : Controller
         
         return RedirectToAction("All");
     }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {  
+        Genre genre = _genreService.GetGenreById(id);
+        
+        return View(genre);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(int id, string name)
+    {
+        _genreService.Edit(id, name);
+        
+        return RedirectToAction("All");
+    }
 }

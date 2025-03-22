@@ -6,4 +6,10 @@ public interface IBookService
 {
     public ICollection<Book> GetAllBooks();
     public void Create(string title, string author, int genreId, string isbn);
+
+    public Book GetBookById(int id);
+    
+    public void Edit(int id, string title, string author, int genreId, string isbn);
+    
+    public void Delete(int id);
 }

@@ -1,6 +1,7 @@
 using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace LibraryManagement.Controllers;
 
@@ -49,5 +50,33 @@ public class BookController : Controller
         _bookService.Create(title, author, genreId, isbn);
         
         return RedirectToAction("All");
+    }
+
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        Book book = _bookService.GetBookById(id);
+        
+        ICollection<Genre> genres = _genreService.GetAllGenres();
+        
+        ViewBag.Genres = new SelectList(genres, "Id", "Name", book.GenreId);
+        
+        return View(book);
+    }
+
+    [HttpPost]
+    public IActionResult Edit(Book book)
+    {
+        _bookService.Edit(book.Id, book.Title, book.Author, book.GenreId, book.Isbn);
+        
+        return RedirectToAction("All");
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        _bookService.Delete(id);
+
+        return Redirect($"/Book/All");
     }
 }

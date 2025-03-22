@@ -22,7 +22,7 @@ public class GenreService : IGenreService
 
     public Genre GetGenreById(int id)
     {
-        Genre genre = _context.Genres.FirstOrDefault(g => g.Id == id);
+        Genre? genre = _context.Genres.FirstOrDefault(g => g.Id == id);
         
         if (genre == null)
             throw new KeyNotFoundException($"Genre with id {id} not found");
@@ -39,6 +39,15 @@ public class GenreService : IGenreService
         
         _context.Genres.Add(genre);
         
+        _context.SaveChanges();
+    }
+
+    public void Edit(int id, string name)
+    {
+        Genre genre = GetGenreById(id);
+        
+        genre.Name = name;
+
         _context.SaveChanges();
     }
 }

@@ -15,8 +15,11 @@ public class Book
     [MaxLength(256)]
     public string Author { get; set; }
     
+    
+    public int GenreId { get; set; }
+    
     public Genre Genre { get; set; }
     
-    [RegularExpression(@"^\\d{1,4}-\\d{1,4}$", ErrorMessage = "Invalid ISBN")]
+    [RegularExpression(@"^\d{1,4}-\d{1,4}$", ErrorMessage = "Invalid ISBN")]
     public string Isbn { get; set; }
 }

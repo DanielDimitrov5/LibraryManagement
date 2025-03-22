@@ -9,4 +9,6 @@ public interface IGenreService
     public Genre GetGenreById(int id);
 
     public void AddGenre(string name);
+
+    public void Edit(int id, string name);
 }
