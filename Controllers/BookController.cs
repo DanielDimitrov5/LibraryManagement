@@ -20,7 +20,7 @@ public class BookController : Controller
         _genreService = genreService;
     }
 
-    [HttpGet]
+    [HttpGet("/")]
     public IActionResult All()
     {
         
