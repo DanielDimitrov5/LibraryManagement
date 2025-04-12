@@ -1,3 +1,4 @@
+using System.Collections;
 using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -32,6 +33,15 @@ public class BookController : Controller
         _logger.Log(LogLevel.Information, "BookController::All");
         
         // Pass data to view
+        return View(books);
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> MyBooks()
+    {
+        ICollection<Book> books = await _bookService.GetMyBooksAsync();
+        
         return View(books);
     }
 

@@ -6,6 +6,11 @@ namespace LibraryManagement.Data.Models;
 [Index(nameof(Isbn), IsUnique = true)]
 public class Book
 {
+    public Book()
+    {
+        Borrowers = new List<User>();
+    }
+    
     [Key]
     public int Id { get; set; }
     

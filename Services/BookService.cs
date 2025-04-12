@@ -1,6 +1,7 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Services;
@@ -9,16 +10,38 @@ public class BookService : IBookService
 {
     private readonly LibraryDbContext _context;
     private readonly IGenreService _genreService;
+    private readonly UserManager<User> _userManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public BookService(LibraryDbContext context, IGenreService genreService)
+    public BookService(LibraryDbContext context, IGenreService genreService, UserManager<User> userManager, IHttpContextAccessor httpContextAccessor, IUserService userService)
     {
         _context = context;
         _genreService = genreService;
+        _userManager = userManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public ICollection<Book> GetAllBooks()
     {
         ICollection<Book> books = _context.Books.Include(x=> x.Genre).ToList();
+        
+        return books;
+    }
+
+    public async Task<ICollection<Book>> GetMyBooksAsync()
+    {
+        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext.User);
+        User user = await _userManager.FindByIdAsync(userId);
+
+        if (user == null)
+        {
+            return null;
+        }
+        
+        ICollection<Book> books = _context.Books
+            .Where(x=>x.Borrowers.Contains(user))
+            .Include(x=>x.Genre)
+            .ToList();
         
         return books;
     }

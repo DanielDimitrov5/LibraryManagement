@@ -33,6 +33,7 @@ builder.Services.AddTransient<IGenreService, GenreService>();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.AddTransient<IUserService, UserService>();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

@@ -8,6 +8,11 @@ namespace LibraryManagement.Data.Models;
 
 public class User : IdentityUser
 {
+    public User()
+    {
+        BorrowedBooks = new List<Book>();
+    }
+    
     public ICollection<Book> BorrowedBooks { get; set; }
 }
 
