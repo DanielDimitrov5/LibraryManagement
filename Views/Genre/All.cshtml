@@ -1,4 +1,11 @@
+@using LibraryManagement.Data.Models
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+
 @model IEnumerable<LibraryManagement.Data.Models.Genre>
+
+@inject SignInManager<User> SignInManager;
+@inject UserManager<User> UserManager;
 
 @{
     ViewData["Title"] = "Genre Page";
@@ -45,16 +52,26 @@
 <h1>Genres</h1>
 
 <div class="genres-container">
-    
-<a class="btn btn-lg btn-primary" asp-action="Create">Add genre</a>
 
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-lg btn-primary" asp-action="Create">Add genre</a>
+    }
+    
     <div class="genres-container">
         
         @foreach (var genre in @Model)
         {
-            <div onclick="window.location.href='@Url.Action("Edit", "Genre", new { id = @genre.Id })';" class="genre-card">@genre.Name</div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div onclick="window.location.href='@Url.Action("Edit", "Genre", new { id = @genre.Id })';" class="genre-card">@genre.Name</div>
+            }
+            else
+            {
+                <div class="genre-card">@genre.Name</div>
+            }
         }
-
     </div>
 
 </div>

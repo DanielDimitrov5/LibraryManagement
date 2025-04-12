@@ -1,5 +1,6 @@
 using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManagement.Controllers;
@@ -30,12 +31,14 @@ public class GenreController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(string name)
     {
         _genreService.AddGenre(name);
@@ -44,6 +47,7 @@ public class GenreController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Edit(int id)
     {  
         Genre genre = _genreService.GetGenreById(id);
@@ -52,6 +56,7 @@ public class GenreController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Edit(int id, string name)
     {
         _genreService.Edit(id, name);

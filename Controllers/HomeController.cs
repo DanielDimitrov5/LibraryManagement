@@ -10,12 +10,9 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     
-    private readonly LibraryDbContext _context;
-    
     public HomeController(ILogger<HomeController> logger, LibraryDbContext context)
     {
         _logger = logger;
-        _context = context;
     }
 
     public IActionResult Index()

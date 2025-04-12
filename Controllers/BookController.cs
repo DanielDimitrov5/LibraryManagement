@@ -1,5 +1,6 @@
 using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -35,6 +36,7 @@ public class BookController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         ICollection<Genre> genres = _genreService.GetAllGenres();
@@ -45,6 +47,7 @@ public class BookController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Create(string title, string author, int genreId, string isbn)
     {
         _bookService.Create(title, author, genreId, isbn);
@@ -53,6 +56,7 @@ public class BookController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Edit(int id)
     {
         Book book = _bookService.GetBookById(id);
@@ -65,6 +69,7 @@ public class BookController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult Edit(Book book)
     {
         _bookService.Edit(book.Id, book.Title, book.Author, book.GenreId, book.Isbn);
@@ -73,10 +78,11 @@ public class BookController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult Delete(int id)
     {
         _bookService.Delete(id);
 
-        return Redirect($"/Book/All");
+        return Redirect($"/");
     }
 }

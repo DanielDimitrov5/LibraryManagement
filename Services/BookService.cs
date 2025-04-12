@@ -30,6 +30,8 @@ public class BookService : IBookService
             Title = title,
             Author = author,
             Genre = _genreService.GetGenreById(genreId),
+            Copies = 1,
+            AvailableCopies = 1,
             Isbn = isbn
         };
         

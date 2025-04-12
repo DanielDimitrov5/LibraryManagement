@@ -15,10 +15,15 @@ public class Book
     [MaxLength(256)]
     public string Author { get; set; }
     
-    
     public int GenreId { get; set; }
     
     public Genre Genre { get; set; }
+    
+    public int Copies { get; set; }
+    
+    public int AvailableCopies { get; set; }
+
+    public ICollection<User> Borrowers { get; set; }
     
     [RegularExpression(@"^\d{1,4}-\d{1,4}$", ErrorMessage = "Invalid ISBN")]
     public string Isbn { get; set; }
