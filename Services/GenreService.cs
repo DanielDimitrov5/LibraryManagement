@@ -1,6 +1,8 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Exceptions;
 using LibraryManagement.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagement.Services;
 
@@ -13,41 +15,43 @@ public class GenreService : IGenreService
         _context = context;
     }
 
-    public ICollection<Genre> GetAllGenres()
+    public async Task<ICollection<Genre>> GetAllGenresAsync()
     {
-        ICollection<Genre> genres = _context.Genres.ToList();
+        ICollection<Genre> genres = await _context.Genres.ToListAsync();
         
         return genres;
     }
 
-    public Genre GetGenreById(int id)
+    public async Task<Genre> GetGenreByIdAsync(int id)
     {
-        Genre? genre = _context.Genres.FirstOrDefault(g => g.Id == id);
-        
+        Genre? genre = await _context.Genres.FirstOrDefaultAsync(g => g.Id == id);
+
         if (genre == null)
-            throw new KeyNotFoundException($"Genre with id {id} not found");
+        {
+            throw new GenreNotFoundException($"Genre with id {id} not found!");
+        }
         
         return genre;
     }
 
-    public void AddGenre(string name)
+    public async Task AddGenreAsync(string name)
     {
         Genre genre = new Genre
         {
             Name = name
         };
         
-        _context.Genres.Add(genre);
+        await _context.Genres.AddAsync(genre);
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void Edit(int id, string name)
+    public async Task EditAsync(int id, string name)
     {
-        Genre genre = GetGenreById(id);
+        Genre genre = await GetGenreByIdAsync(id);
         
         genre.Name = name;
 
-        _context.SaveChanges();
+       await _context.SaveChangesAsync();
     }
 }

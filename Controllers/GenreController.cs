@@ -2,6 +2,7 @@ using LibraryManagement.Data.Models;
 using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.utils;
 
 namespace LibraryManagement.Controllers;
 
@@ -18,10 +19,10 @@ public class GenreController : Controller
     }
 
     [HttpGet]
-    public IActionResult All()
+    public async Task<IActionResult> All()
     {
         // Get all genres
-        ICollection<Genre> genres = _genreService.GetAllGenres();
+        ICollection<Genre> genres = await _genreService.GetAllGenresAsync();
         
         // Log message
         _logger.Log(LogLevel.Information, "GenreController::All");
@@ -32,35 +33,45 @@ public class GenreController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
         return View();
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Create(string name)
+    public async Task<IActionResult> Create(string name)
     {
-        _genreService.AddGenre(name);
+        await _genreService.AddGenreAsync(name);
         
         return RedirectToAction("All");
     }
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(int id)
-    {  
-        Genre genre = _genreService.GetGenreById(id);
+    public async Task<IActionResult> Edit(int id)
+    {
+        Genre? genre = await TryCatchHelper.TryCatchAsync(
+            async () => await _genreService.GetGenreByIdAsync(id),
+            _logger,
+            this,
+            nameof(Edit)
+        );
         
         return View(genre);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(int id, string name)
+    public async Task<IActionResult> Edit(int id, string name)
     {
-        _genreService.Edit(id, name);
-        
+       await TryCatchHelper.TryCatchAsync(
+            async () => await _genreService.GetGenreByIdAsync(id),
+            _logger,
+            this,
+            nameof(Edit)
+        );
+
         return RedirectToAction("All");
     }
 }

@@ -1,5 +1,6 @@
 using LibraryManagement.Data;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Exceptions;
 using LibraryManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,9 +22,9 @@ public class BookService : IBookService
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public ICollection<Book> GetAllBooks()
+    public async Task<ICollection<Book>> GetAllBooksAsync()
     {
-        ICollection<Book> books = _context.Books.Include(x=> x.Genre).ToList();
+        ICollection<Book> books = await _context.Books.Include(x=> x.Genre).ToListAsync();
         
         return books;
     }
@@ -38,61 +39,61 @@ public class BookService : IBookService
             return null;
         }
         
-        ICollection<Book> books = _context.Books
+        ICollection<Book> books = await _context.Books
             .Where(x=>x.Borrowers.Contains(user))
             .Include(x=>x.Genre)
-            .ToList();
+            .ToListAsync();
         
         return books;
     }
 
-    public void Create(string title, string author, int genreId, string isbn)
+    public async Task CreateAsync(string title, string author, int genreId, string isbn)
     {
         Book book = new Book
         {
             Title = title,
             Author = author,
-            Genre = _genreService.GetGenreById(genreId),
+            Genre = await _genreService.GetGenreByIdAsync(genreId),
             Copies = 1,
             AvailableCopies = 1,
             Isbn = isbn
         };
         
-        _context.Books.Add(book);
+        await _context.Books.AddAsync(book);
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public Book GetBookById(int id)
+    public async Task<Book> GetBookByIdAsync(int id)
     { 
-        Book? book = _context.Books.Include(x=> x.Genre).FirstOrDefault(x=> x.Id == id);
+        Book? book = await _context.Books.Include(x=> x.Genre).FirstOrDefaultAsync(x=> x.Id == id);
 
         if (book == null)
         {
-            throw new NullReferenceException("Book not found");
+            throw new BookNotFoundException($"Book with id {id} was not found");
         }
         
         return book;
     }
 
-    public void Edit(int id, string title, string author, int genreId, string isbn)
+    public async Task EditAsync(int id, string title, string author, int genreId, string isbn)
     {
-        Book book = GetBookById(id);
+        Book book = await GetBookByIdAsync(id);
         
         book.Title = title;
         book.Author = author;
-        book.Genre = _genreService.GetGenreById(genreId);
+        book.Genre = await _genreService.GetGenreByIdAsync(genreId);
         book.Isbn = isbn;
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        Book book = GetBookById(id);
+        Book book = await GetBookByIdAsync(id);
         
         _context.Books.Remove(book);
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
     }
 }

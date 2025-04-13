@@ -4,11 +4,11 @@ namespace LibraryManagement.Services.Interfaces;
 
 public interface IGenreService
 {
-    public ICollection<Genre> GetAllGenres();
+    public Task<ICollection<Genre>> GetAllGenresAsync();
 
-    public Genre GetGenreById(int id);
+    public Task<Genre> GetGenreByIdAsync(int id);
 
-    public void AddGenre(string name);
+    public Task AddGenreAsync(string name);
 
-    public void Edit(int id, string name);
+    public Task EditAsync(int id, string name);
 }

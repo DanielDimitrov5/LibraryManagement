@@ -1,6 +1,8 @@
 using System.Collections;
 using LibraryManagement.Data.Models;
+using LibraryManagement.Exceptions;
 using LibraryManagement.Services.Interfaces;
+using LibraryManagement.utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,11 +25,11 @@ public class BookController : Controller
     }
 
     [HttpGet("/")]
-    public IActionResult All()
+    public async Task<IActionResult> All()
     {
         
         // Get all books
-        ICollection<Book> books = _bookService.GetAllBooks();
+        ICollection<Book> books = await _bookService.GetAllBooksAsync();
         
         // Log message
         _logger.Log(LogLevel.Information, "BookController::All");
@@ -47,9 +49,9 @@ public class BookController : Controller
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        ICollection<Genre> genres = _genreService.GetAllGenres();
+        ICollection<Genre> genres = await _genreService.GetAllGenresAsync();
         
         ViewBag.Genres = genres;
         
@@ -58,40 +60,53 @@ public class BookController : Controller
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Create(string title, string author, int genreId, string isbn)
+    public async Task<IActionResult> Create(string title, string author, int genreId, string isbn)
     {
-        _bookService.Create(title, author, genreId, isbn);
+        await _bookService.CreateAsync(title, author, genreId, isbn);
         
         return RedirectToAction("All");
     }
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {
-        Book book = _bookService.GetBookById(id);
-        
-        ICollection<Genre> genres = _genreService.GetAllGenres();
-        
-        ViewBag.Genres = new SelectList(genres, "Id", "Name", book.GenreId);
-        
+        Book? book = await TryCatchHelper.TryCatchAsync(async () => 
+            {
+                Book book = await _bookService.GetBookByIdAsync(id);
+
+                ICollection<Genre> genres = await _genreService.GetAllGenresAsync();
+
+                ViewBag.Genres = new SelectList(genres, "Id", "Name", book.GenreId);
+
+                return book;
+            },
+            _logger,
+            this,
+            nameof(BookController.Edit));
+
         return View(book);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult Edit(Book book)
+    public async Task<IActionResult> Edit(Book book)
     {
-        _bookService.Edit(book.Id, book.Title, book.Author, book.GenreId, book.Isbn);
+        await TryCatchHelper.TryCatchAsync(
+            async () => await _bookService.EditAsync(book.Id, book.Title, book.Author, book.GenreId, book.Isbn),
+            _logger,
+            this,
+            nameof(BookController.Edit)
+        );
         
         return RedirectToAction("All");
     }
 
     [HttpGet]
     [Authorize(Roles = "Admin")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        _bookService.Delete(id);
+        await _bookService.DeleteAsync(id);
 
         return Redirect($"/");
     }
