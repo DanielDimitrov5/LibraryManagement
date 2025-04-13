@@ -1,0 +1,57 @@
+@using LibraryManagement.Data.Models
+@using LibraryManagement.Data.ViewModels
+@using Microsoft.AspNetCore.Identity
+@model IEnumerable<LibraryManagement.Data.ViewModels.UserViewModel>
+
+@{
+    ViewData["Title"] = "Users List";
+    
+    var admins = Model.Where(x => x.Roles.Count > 0).ToList();
+    var regularUsers = Model.Where(x => x.Roles.Count == 0).ToList();
+    string? error = TempData["Error"]?.ToString();
+}
+
+@if (error is null)
+{
+
+    <h2>Users List</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>User Name</th>
+            <th>Phone Number</th>
+            <th>Roles</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in admins)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.PhoneNumber</td>
+                <td>@string.Join(", ", user.Roles)</td>
+            </tr>
+        }
+
+        @foreach (var user in regularUsers)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.PhoneNumber</td>
+                <td>@string.Join(", ", user.Roles)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    @await Html.PartialAsync("_AlertPartial", new AlertViewModel
+    {
+        AlertMessage = @error,
+        ButtonText = "Back home",
+        ActionName = "All",
+        ControllerName = "Book"
+    })
+}
