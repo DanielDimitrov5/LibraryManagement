@@ -1,0 +1,6 @@
+﻿services:
+  librarymanagment:
+    image: librarymanagement
+    build:
+      context: .
+      dockerfile: LibraryManagement/Dockerfile
