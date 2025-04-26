@@ -1,0 +1,79 @@
+@using LibraryManagement.Data.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryManagement.Data.Models.Book
+
+@{
+    ViewData["Title"] = "Edit Book";
+    string? error = TempData["Error"]?.ToString();
+}
+
+@if (error is null)
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+
+                <div class="card shadow rounded-3">
+                    <div class="card-header bg-warning text-dark text-center">
+                        <h2 class="mb-0">Edit Book</h2>
+                    </div>
+
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+
+                            <!-- Hidden field for the Id -->
+                            <input type="hidden" asp-for="Id"/>
+
+                            <div class="mb-3">
+                                <label asp-for="Title" class="form-label">Title</label>
+                                <input asp-for="Title" class="form-control" placeholder="Enter book title" required/>
+                                <span asp-validation-for="Title" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Author" class="form-label">Author</label>
+                                <input asp-for="Author" class="form-control" placeholder="Enter author name" required/>
+                                <span asp-validation-for="Author" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="GenreId" class="form-label">Genre</label>
+                                <select asp-for="GenreId" asp-items="ViewBag.Genres" class="form-select" required>
+                                    <option value="">Select a genre</option>
+                                </select>
+                                <span asp-validation-for="GenreId" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="Isbn" class="form-label">ISBN</label>
+                                <input asp-for="Isbn" class="form-control" placeholder="e.g. 1234-5678" required/>
+                                <span asp-validation-for="Isbn" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-warning btn-lg">Save</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @await Html.PartialAsync("_AlertPartial", new AlertViewModel
+    {
+        AlertMessage = @error,
+        ButtonText = "Back to books",
+        ActionName = "All",
+        ControllerName = "Book"
+    })
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

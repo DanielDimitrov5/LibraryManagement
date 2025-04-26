@@ -1,0 +1,56 @@
+@using LibraryManagement.Data.ViewModels
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model LibraryManagement.Data.Models.Genre;
+
+@{
+    ViewData["Title"] = "Edit Genre";
+    string? error = TempData["Error"]?.ToString();
+}
+
+@if (error is null)
+{
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <div class="card shadow rounded-3">
+                    <div class="card-header bg-warning text-dark text-center">
+                        <h2 class="mb-0">Edit Genre</h2>
+                    </div>
+
+                    <div class="card-body">
+                        <form asp-action="Edit" method="post">
+                            <input type="hidden" asp-for="Id"/>
+
+                            <div class="mb-3">
+                                <label asp-for="Name" class="form-label">@Model.Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="Enter genre name" required/>
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-warning btn-lg">Save</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @await Html.PartialAsync("_AlertPartial", new AlertViewModel
+    {
+        AlertMessage = @error,
+        ButtonText = "Back to genres",
+        ActionName = "All",
+        ControllerName = "Genre"
+    })
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
