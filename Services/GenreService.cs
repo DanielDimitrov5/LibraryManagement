@@ -52,6 +52,6 @@ public class GenreService : IGenreService
         
         genre.Name = name;
 
-       await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
     }
 }
